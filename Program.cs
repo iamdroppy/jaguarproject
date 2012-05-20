@@ -13,7 +13,8 @@ namespace JaguarProject
 {
     class Program
     {
-        public static TcpListener listener;
+        public static Socket server;
+        public static Socket client;
         public static XmlReader config;
         public static string hotelName;
         public static int serverPort;
@@ -25,7 +26,7 @@ namespace JaguarProject
             ConsoleLog.LogLine("Opening configuration file (Config.xml)");
             readXml();
             startServer();
-            mainLoop();
+            while (true) { }
         }
 
         public static void readXml()
@@ -73,8 +74,10 @@ namespace JaguarProject
             ConsoleLog.LogLine("Starting server on port " + serverPort);
             try
             {
-                listener = new TcpListener(serverPort);
-                listener.Start();
+                server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                server.Bind(new IPEndPoint(IPAddress.Any, serverPort));
+                server.Listen(5);
+                server.BeginAccept(new AsyncCallback(AcceptClient), null);
                 ConsoleLog.LogLine("Successfully started. Now listening for clients.");
             }
             catch
@@ -82,14 +85,14 @@ namespace JaguarProject
                 ConsoleLog.LogError("Unable to start on port " + serverPort + " due to port/permissions conflicts.");
             }
         }
-        public static void mainLoop()
+        public static void AcceptClient(IAsyncResult ar)
         {
-            while (true)
-            {
-                User userClient = new User(listener.AcceptSocket());
-                Thread userThread = new Thread(new ThreadStart(userClient.handleClient));
-                userThread.Start();
-            }
+            client = server.EndAccept(ar);
+            server.BeginAccept(new AsyncCallback(AcceptClient), null);
+            ConsoleLog.LogLine("Client connected from " + client.RemoteEndPoint);
+            User newUser = new User(client);
+            Thread userThread = new Thread(new ThreadStart(newUser.handleServices));
+            userThread.Start();
         }
     }
 }

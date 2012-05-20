@@ -12,26 +12,44 @@ namespace JaguarProject.Client
 {
     class User
     {
-        public Socket clientSocket;
-        public Stream clientStream;
-        public StreamReader downStream;
-        public StreamWriter upStream;
+        private Socket connection;
+        private byte[] bufferData = new byte[1024];
 
-        public User(object connection)
+        public User(Socket newClient)
         {
-            clientSocket = (Socket)connection;
-            clientStream = new NetworkStream(clientSocket);
-            downStream = new StreamReader(clientStream);
-            upStream = new StreamWriter(clientStream);
-            upStream.AutoFlush = true;
-            ConsoleLog.LogLine("Client connected and bound from " + clientSocket.RemoteEndPoint.ToString());
+            connection = newClient;
         }
 
-        public void handleClient()
+        public void handleServices()
         {
-            while (true)
+            connection.BeginReceive(bufferData, 0, bufferData.Length, SocketFlags.None, new AsyncCallback(OnArrival), connection);
+        }
+
+        public void OnArrival(IAsyncResult ar)
+        {
+            connection = (Socket)ar.AsyncState;
+            string data;
+            int bytesRead = connection.EndReceive(ar);
+            if (IsConnected(connection))
+                connection.BeginReceive(bufferData, 0, bufferData.Length, SocketFlags.None, new AsyncCallback(OnArrival), connection);
+            else
+                ConsoleLog.LogLine("Client from " + connection.RemoteEndPoint + " has disconnected.");
+            if (bytesRead > 0)
             {
-                upStream.Write("HI THERE!");
+                data = System.Text.Encoding.ASCII.GetString(bufferData, 0, bytesRead);
+                ConsoleLog.LogLine(connection.RemoteEndPoint + " SENT: " + data);
+            }
+        }
+
+        static bool IsConnected(Socket connection)
+        {
+            try
+            {
+                return !(connection.Poll(1, SelectMode.SelectRead) && connection.Available == 0);
+            }
+            catch (SocketException)
+            {
+                return false;
             }
         }
     }
