@@ -19,12 +19,15 @@ namespace JaguarProject
         public static string hotelName;
         public static int serverPort;
 
+        //MySQL Connection Information
+
         public static void Main(string[] args)
         {
             Console.WriteLine("JaguarProject Sulake Emulator");
             Console.WriteLine("Development Version 0.0.1\n");
             ConsoleLog.LogLine("Opening configuration file (Config.xml)");
             readXml();
+            MySQLConnect();
             startServer();
             while (true) { }
         }
@@ -53,6 +56,18 @@ namespace JaguarProject
                                     hotelName = config.Value;
                                     ConsoleLog.LogLine("Read configuration 'Hotel Name' as " + hotelName);
                                     break;
+                                case "Host":
+                                    DBConnection.mysql_host = config.Value;
+                                    break;
+                                case "DBName":
+                                    DBConnection.mysql_db = config.Value;
+                                    break;
+                                case "UserName":
+                                    DBConnection.mysql_user = config.Value;
+                                    break;
+                                case "Password":
+                                    DBConnection.mysql_user_pass = config.Value;
+                                    break;
                                 default:
                                     break;
                             }
@@ -65,6 +80,17 @@ namespace JaguarProject
             catch
             {
                 ConsoleLog.LogError("Config.xml was either not found or contained invalid data.");
+                Console.Read();
+                Environment.Exit(-1);
+            }
+        }
+        public static void MySQLConnect()
+        {
+            DBConnection mainConnection = new DBConnection();
+            if (mainConnection.connect())
+                ConsoleLog.LogLine("Successfully connected to MySQL server.");
+            else
+            {
                 Console.Read();
                 Environment.Exit(-1);
             }

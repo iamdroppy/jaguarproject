@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <JaguarConfig>
-  <ServerPort>1232</ServerPort>
-  <HotelName>Jaguar Test Hotel</HotelName>
+  
+  <HotelConfig>
+    <ServerPort>1232</ServerPort>
+    <HotelName>Jaguar Test Hotel</HotelName>
+  </HotelConfig>
+  
+  <MySQLConfig>
+    <Host>localhost</Host>
+    <DBName>nexodb</DBName>
+    <UserName>root</UserName>
+    <Password>laptop</Password>
+  </MySQLConfig>
+  
 </JaguarConfig>

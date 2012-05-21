@@ -4,3 +4,4 @@ c:\users\zgillis\documents\visual studio 2010\Projects\JaguarProject\JaguarProje
 c:\users\zgillis\documents\visual studio 2010\Projects\JaguarProject\JaguarProject\obj\x86\Debug\JaguarProject.exe
 c:\users\zgillis\documents\visual studio 2010\Projects\JaguarProject\JaguarProject\obj\x86\Debug\JaguarProject.pdb
 C:\Users\zgillis\documents\visual studio 2010\Projects\JaguarProject\JaguarProject\bin\Debug\Config.xml
+C:\Users\zgillis\Documents\Visual Studio 2010\Projects\JaguarProject\JaguarProject\bin\Debug\MySql.Data.dll
