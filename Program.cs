@@ -19,7 +19,14 @@ namespace JaguarProject
         public static string hotelName;
         public static int serverPort;
 
-        //MySQL Connection Information
+        #region FuseRights
+        public static string fuse_admin = "fuse_room_queue_defaultfuse_tradefuse_buy_creditsfuse_loginfuse_receive_calls_for_helpfuse_moderator_accessfuse_room_alertfuse_any_room_controllerfuse_ignore_room_ownerfuse_pick_up_any_furnifuse_alertfuse_receive_calls_for_helpfuse_room_kickfuse_administrator_accessfuse_remove_stickiesfuse_enter_locked_roomsfuse_superbanfuse_kickfuse_habbo_chooserfuse_furni_chooserfuse_enter_full_roomsfuse_room_mutefuse_modfuse_banfuse_mutefuse_see_flat_idsdefault";
+        public static string fuse_moderator = "fuse_room_queue_defaultfuse_tradefuse_buy_creditsfuse_loginfuse_receive_calls_for_helpfuse_moderator_accessfuse_room_alertfuse_any_room_controllerfuse_ignore_room_ownerfuse_pick_up_any_furnifuse_alertfuse_receive_calls_for_helpfuse_room_kickfuse_administrator_accessfuse_remove_stickiesfuse_enter_locked_roomsfuse_superbanfuse_kickfuse_habbo_chooserfuse_furni_chooserfuse_enter_full_roomsfuse_room_mutefuse_modfuse_banfuse_mutefuse_see_flat_idsdefault";
+        public static string fuse_habbo = "fuse_room_queue_defaultfuse_tradefuse_buy_creditsfuse_logindefaultdefault";
+        public static string fuse_silver = "fuse_room_queue_defaultfuse_tradefuse_buy_creditsfuse_loginfuse_ignore_room_ownerfuse_enter_locked_roomsfuse_habbo_chooserfuse_furni_chooserfuse_enter_full_roomsfuse_kickdefault";
+        public static string fuse_gold = "fuse_room_queue_defaultfuse_tradefuse_buy_creditsfuse_loginfuse_ignore_room_ownerfuse_enter_locked_roomsfuse_habbo_chooserfuse_furni_chooserfuse_enter_full_roomsfuse_kickdefault";
+        public static string fuse_habbox = "fuse_room_queue_defaultfuse_tradefuse_buy_creditsfuse_loginfuse_enter_locked_roomsfuse_habbo_chooserfuse_furni_chooserfuse_enter_full_roomsfuse_use_club_outfitsfuse_use_club_badgefuse_use_special_room_layoutsfuse_room_queue_clubfuse_room_queue_defaultfuse_use_club_dancefuse_priority_accessdefault";
+        #endregion
 
         public static void Main(string[] args)
         {
@@ -86,6 +93,7 @@ namespace JaguarProject
         }
         public static void MySQLConnect()
         {
+            ConsoleLog.LogLine("Connecting to MySQL server " + DBConnection.mysql_user + "@" + DBConnection.mysql_host);
             DBConnection mainConnection = new DBConnection();
             if (mainConnection.connect())
                 ConsoleLog.LogLine("Successfully connected to MySQL server.");

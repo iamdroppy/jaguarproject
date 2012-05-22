@@ -113,7 +113,7 @@ namespace JaguarProject.Client
                     string name = packet.Substring(4, userNameLen);
                     int passLen = Data.decodeB64(packet.Substring((4 + userNameLen), 2));
                     string pass = packet.Substring((6 + userNameLen), passLen);
-                    ConsoleLog.LogErrorLine("Desired username: " + name + " and desired pass: " + pass);
+                    //ConsoleLog.LogErrorLine("Desired username: " + name + " and desired pass: " + pass);
                     if (DBFunctions.userTaken(db.connection, name) == 1)
                         sendData("@dPA\u0001");
                     else if (DBFunctions.userTaken(db.connection, name) == 0)
@@ -155,11 +155,33 @@ namespace JaguarProject.Client
                     break;
 
                 case "@k": //Huge registration finalization packet
-                    int namelenlen = Data.decodeB64(packet.Substring(2, 2));
-                    int namelen = Data.decodeB64(packet.Substring(4, namelenlen));
-                    string finalName = packet.Substring(5, namelen);
-                    int applen = Data.decodeB64(packet.Substring((7+namelen), 2));
-                    //string app 
+                    int final_namelen = Data.decodeB64(packet.Substring(4,2));
+                    string final_name = packet.Substring(6, final_namelen);
+                    int final_applen = Data.decodeB64(packet.Substring((8+final_namelen), 2));
+                    string final_app = packet.Substring((10 + final_namelen), final_applen);
+                    string final_gender = packet.Substring((14 + final_namelen + final_applen), 1);
+                    int final_emaillen = Data.decodeB64(packet.Substring((21 + final_namelen + final_applen), 2));
+                    string final_email = packet.Substring((23 + final_namelen + final_applen), final_emaillen);
+                    int final_doblen = Data.decodeB64(packet.Substring((25 + final_namelen + final_applen + final_emaillen), 2));
+                    string final_dob = packet.Substring((27 + final_namelen + final_applen + final_emaillen), final_doblen);
+                    int final_passlen = Data.decodeB64(packet.Substring((38 + final_namelen + final_applen + final_emaillen + final_doblen), 2));
+                    string final_pass = packet.Substring((40 + final_namelen + final_applen + final_emaillen + final_doblen), final_passlen);
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine("Username: " + final_name);
+                    Console.WriteLine("Password: " + final_pass);
+                    Console.WriteLine("Email: " + final_email);
+                    Console.WriteLine("App: " + final_app);
+                    Console.WriteLine("Gender: " + final_gender);
+                    Console.WriteLine("DOB: " + final_dob);
+                    if (DBFunctions.userTaken(db.connection, final_name) == 1)
+                        sendData("BKYou are attempting to script. Registration denied.\u0001");
+                    else if (DBFunctions.userTaken(db.connection, final_name) == 0)
+                    {
+                        if (DBFunctions.createUser(db.connection, final_name, final_pass, final_email, final_app, final_dob, final_gender))
+                            sendData(Program.fuse_habbo + "\u0001@DH\u0001@C\u0001");
+                        else
+                            sendData("BKRegistration failed.\u0001");
+                    }
                     break;
 
                 #endregion
